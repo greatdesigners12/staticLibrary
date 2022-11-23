@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\RouteController;
 use App\Http\Controllers\WriterController;
+use App\Models\Writer;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +17,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [WriterController::class, "index"]);
+Route::get('/', [WriterController::class, "index"])->name("allDataPage");
 
 Route::get('/writer/{id}', [WriterController::class, "showWriterById"]);
+
+Route::get('/addBook', function(){
+    return view("createBook", ["title" => "Add Book", "writerData" => Writer::all()]);
+})->name("toAddBookPage");
+
+Route::post('/createBook', [BookController::class, "createBook"])->name("createBook");
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -38,6 +47,3 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

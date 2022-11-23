@@ -1,7 +1,12 @@
 @extends("template")
 
 @section('content')
-<form method="GET" ">
+@if (session("added"))
+    <div class="alert alert-success">
+      {{session("added")}}
+    </div>
+@endif
+<form method="GET">
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">Search</label>
       <input type="text" class="form-control" name="search" value="<?= (isset($_GET["search"])) ? $_GET["search"] : "" ?>" placeholder="Search">
@@ -59,30 +64,34 @@
         </tbody>
       </table>
       {{$data->links('pagination::bootstrap-4')}}
+      @if (Auth::check() && Auth::user()->status == "admin")
+        <button class="btn btn-primary"><a class="no-text-decoration text-white" href="{{route('toAddBookPage')}}">Add Book</a></button> 
+      @endif
+      
       <h1 class="my-3">Book</h1>
       <table class="table">
         <thead>
           <tr>
             <th scope="col">No</th>
+            <th scope="col">Cover Book</th>
             <th scope="col">Title</th>
             <th scope="col">Synopsis</th>
             <th scope="col">Writer Name</th>
           </tr>
         </thead>
         
+        
         <tbody>
         @foreach($dataBook as $i=>$book)
-    
+       
           <tr>
-            <th scope="row">{{$i}}</th>
-            <td>{{$book["title"]}} </td>
-            <td>{{$book["synopsis"]}}</td>
+            <th scope="row">{{$loop->iteration}}</th>
+            <td><img src="img/{{$book["coverphoto"]}} " style="width: 50px; height:50px;" alt=""> </td>
+            <td >{{$book["title"]}} </td>
+            <td >{{$book["synopsis"]}}</td>
             
-            <td>{{$book["contact"]}}</td>
-            <td>
-                
-                {{$book["writer_name"]}}
-            </td>
+     
+            <td>{{$book->writer->name}}</td>
           </tr>
           @endforeach
         </tbody>
